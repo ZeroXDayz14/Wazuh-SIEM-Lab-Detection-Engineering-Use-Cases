@@ -1,0 +1,22 @@
+<!-- Local rules -->
+
+<group name="local_rules,">
+
+  <rule id="100500" level="10">
+    <if_sid>92027</if_sid>
+    <description>Custom: PowerShell execution detected</description>
+  </rule>
+
+  <rule id="100501" level="12">
+    <if_sid>92027</if_sid>
+    <match>Invoke-WebRequest</match>
+    <description>Custom: PowerShell download detected</description>
+  </rule>
+
+  <rule id="100502" level="13">
+    <if_sid>92027</if_sid>
+    <match>-enc</match>
+    <description>Custom: Encoded PowerShell detected</description>
+  </rule>
+
+</group>

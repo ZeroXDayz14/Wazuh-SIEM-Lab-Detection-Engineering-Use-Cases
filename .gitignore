@@ -1,0 +1,44 @@
+# Logs
+
+*.log
+
+# Windows event logs
+
+*.evtx
+
+# Archives
+
+*.zip
+*.7z
+*.iso
+
+# Virtual machine disks
+
+*.vdi
+*.vmdk
+*.qcow2
+
+# Temporary / backup files
+
+*.tmp
+*.bak
+*.swp
+
+# Environment & secrets
+
+.env
+*.env
+passwords.txt
+secrets.txt
+*.key
+*.pem
+
+# Optional: large capture / lab files
+
+*.pcap
+*.pcapng
+
+# Optional: local lab artifacts
+
+wazuh-lab-files/
+
