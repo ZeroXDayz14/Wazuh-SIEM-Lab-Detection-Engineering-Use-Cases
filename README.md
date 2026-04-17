@@ -23,7 +23,7 @@ The lab simulates a real-world **SSH brute-force attack** and shows how to:
 
 * **Wazuh Manager (Ubuntu)** → `192.168.56.10`
 * **Kali Linux (Attacker Machine)** → `192.168.56.40`
-
+* **Wazuh Agent-Windows 10 (Target Machine)** → `192.168.56.20`
 ---
 
 ## 🔄 Data Flow
@@ -52,6 +52,8 @@ Active Response (firewall-drop)
 * Hydra (Brute-force tool)
 * SSH (OpenSSH)
 * nftables / iptables
+* VirtualBox
+* sysmon swiftonsecurity
 
 ---
 
@@ -127,16 +129,6 @@ Configured in `/var/ossec/etc/ossec.conf`:
   <timeout>600</timeout>
 </active-response>
 ```
-
----
-
-## 🔁 Restart Wazuh
-
-```bash
-sudo systemctl restart wazuh-manager
-```
-
----
 
 ## 🔄 Detection → Response Correlation
 
