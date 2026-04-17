@@ -5,11 +5,11 @@
 This project is a multi-use case Security Operations Center (SOC) home lab built using **Wazuh SIEM**. It demonstrates detection, analysis, and response across multiple attack scenarios, simulating real-world SOC workflows.
 
 The lab focuses on:
-- Log collection and analysis  
-- Detection engineering using Wazuh rules  
-- Attack simulation and validation  
-- Automated and manual response actions  
-- Analyst-style triage and investigation  
+- Log collection and analysis
+- Detection engineering using Wazuh rules
+- Attack simulation and validation
+- Automated and manual response actions
+- Analyst-style triage and investigation
 
 ---
 
@@ -17,10 +17,10 @@ The lab focuses on:
 
 ![Architecture](screenshots/architecture.png)
 
-### Environment Components:
-- **Ubuntu Server** – Wazuh Manager, Indexer, Dashboard  
-- **Windows 10 Endpoint** – Sysmon + Wazuh Agent  
-- **Kali Linux** – Attacker machine  
+### Environment Components
+- **Ubuntu Server** – Wazuh Manager, Indexer, Dashboard
+- **Windows 10 Endpoint** – Sysmon + Wazuh Agent
+- **Kali Linux** – Attacker machine
 
 ---
 
@@ -46,164 +46,46 @@ The lab focuses on:
 
 ---
 
-# 🔐 Use Case 1: SSH Brute Force Detection & Response
+## 📂 Detailed Use Cases
 
-## Service Verification
+### 🔐 SSH Brute Force Detection & Response
+- Repeated failed SSH login attempts were detected through Linux authentication logs.
+- Wazuh correlated the activity using Rule `5551`.
+- Active Response blocked the attacker IP through firewall enforcement.
 
-![SSH Running](screenshots/ssh-service-running.png)
+👉 [View Full Case Study](attacks/ssh-bruteforce.md)
 
----
+### 💻 PowerShell Execution Detection
+- Sysmon process creation events were forwarded from the Windows endpoint into Wazuh.
+- A custom rule was used to highlight PowerShell execution activity.
+- This use case demonstrates endpoint visibility and alert generation.
 
-## Attack Simulation (Kali)
+👉 [View Full Case Study](attacks/powershell-execution.md)
 
-![Kali SSH Attempt](screenshots/kali-attack-source.png)
+### 🌐 PowerShell Download Detection
+- PowerShell download activity was simulated using `Invoke-WebRequest`.
+- Command-line visibility allowed Wazuh to match suspicious behavior.
+- A custom rule raised the severity of the alert.
 
----
+👉 [View Full Case Study](attacks/powershell-download.md)
 
-## Log Evidence (auth.log)
+### 🔐 Encoded PowerShell Detection
+- Obfuscated PowerShell commands using `-enc` were simulated in the lab.
+- A custom rule detected encoded command execution.
+- This use case highlights suspicious execution patterns often associated with malicious tradecraft.
 
-![Auth Log Evidence](screenshots/ssh-auth-log-evidence.png)
+👉 [View Full Case Study](attacks/powershell-encoded.md)
 
-- Multiple failed login attempts observed  
-- Source IP: **192.168.56.40**
+### 🌐 Nmap Reconnaissance
+- A network scan was launched from Kali Linux against the lab target.
+- The activity was observed as part of the simulation.
+- Wazuh did not generate an alert, demonstrating a host-based detection gap for network reconnaissance.
 
----
-
-## Initial Detection
-
-![SSH Detection](screenshots/ssh-detection-details.png)
-
-- **Rule ID:** 5760  
-- Authentication failure events detected  
-
----
-
-## Brute Force Detection
-
-![Brute Force Alert](screenshots/ssh-bruteforce-alert.png)
-
-- **Rule ID:** 5551  
-- Multiple failed logins within short timeframe  
+👉 [View Full Case Study](attacks/reconnaissance-nmap.md)
 
 ---
 
-## Active Response Triggered
-
-![Active Response](screenshots/active-response-triggered.png)
-
-- Firewall-drop action executed  
-
----
-
-## Firewall Evidence
-
-![Firewall Rule](screenshots/firewall-blocked-ip.png)
-
-- Attacker IP successfully blocked  
-
----
-
-## Active Response Log (JSON)
-
-![Active Response JSON](screenshots/active-response-json.png)
-
-- Command executed: `firewall-drop`  
-- Triggered by Rule 5551  
-
----
-
-## Analyst Triage
-
-- **Source IP:** 192.168.56.40  
-- **Technique:** T1110 – Brute Force  
-- **Severity:** High  
-- **Verdict:** True Positive  
-- **Action:** IP blocked automatically  
-
----
-
-# 💻 Use Case 2: PowerShell Detection (Windows)
-
-## Sysmon Event Evidence
-
-### Process Creation (Event ID 1)
-![Sysmon Event 1](screenshots/sysmon-local-events-ID-1.png)
-
----
-
-### Network & DNS Activity (Event ID 3 & 22)
-![Sysmon Events](screenshots/sysmon-local-events-ID-22-ID-3.png)
-
----
-
-## Detection Query (Hunting)
-
-![PowerShell Query](screenshots/powershell-commandline-evidence.png)
-
----
-
-## Attack Simulation
-
-![PowerShell Attack](screenshots/powershell-attack-command.png)
-
-- Execution
-- Web request
-- Encoded command
-
----
-
-## Custom Detection Rules
-
-![Custom Rules](screenshots/custom-rules.png)
-
-| Rule ID | Description |
-|--------|------------|
-| 100500 | PowerShell execution |
-| 100501 | PowerShell download |
-| 100502 | Encoded PowerShell |
-
----
-
-## Detection Alerts
-
-![Custom Alerts](screenshots/custom-detection-alerts.png)
-
-- All attack variants successfully detected  
-- Alerts generated with increased severity  
-
----
-
-## Analyst Triage
-
-- **Technique:** T1059.001 – PowerShell  
-- **Technique:** T1105 – Tool Transfer  
-- **Technique:** T1027 – Obfuscation  
-- **Verdict:** True Positive  
-- **Action:** Alert escalation  
-
----
-
-# 🌐 Use Case 3: Nmap Reconnaissance
-
-## Attack Simulation
-
-![Nmap Scan](screenshots/reconnaissance-nmap-filtered.png)
-
-- Target scanned from Kali Linux  
-
----
-
-## Detection Gap
-
-- No alerts generated in Wazuh  
-- Demonstrates limitation of host-based SIEM  
-
-👉 Requires:
-- Network IDS (Suricata / Zeek)
-
----
-
-# 📊 Wazuh Dashboard Overview
+## 📊 Wazuh Dashboard Overview
 
 ![Dashboard](screenshots/wazuh-dashboard-alerts.png)
 
@@ -211,20 +93,20 @@ The lab focuses on:
 
 ## 🔍 Detection Strategy
 
-- Linux detection via **auth.log (PAM events)**  
-- Windows detection via **Sysmon telemetry**  
-- Wazuh correlates logs and triggers alerts  
-- Custom rules extend detection coverage  
+- Linux detection uses **auth.log** and PAM authentication events
+- Windows detection uses **Sysmon telemetry**
+- Wazuh correlates logs and generates alerts
+- Custom rules extend visibility into PowerShell-related behavior
 
 ---
 
 ## ⚡ Response Mechanisms
 
-- **Active Response**
-  - Automatic IP blocking via firewall  
+### Active Response
+- Automatic IP blocking via firewall
 
-- **Alert-Based Detection**
-  - Requires analyst investigation  
+### Alert-Based Detection
+- Alerts requiring analyst review and triage
 
 ---
 
@@ -240,22 +122,31 @@ The lab focuses on:
 
 ---
 
+## 🛠️ Tuning and False Positive Considerations
+
+- Repeated failed SSH logins can also result from legitimate user mistakes or administrative testing.
+- PowerShell execution is common in Windows administration and does not always indicate malicious activity.
+- `Invoke-WebRequest` may appear in benign scripts, software updates, or automation tasks.
+- Encoded PowerShell commands are high-signal, but tuning is still important in enterprise environments.
+
+---
+
 ## 📚 Lessons Learned
 
-- Built-in rules effectively detect brute force attacks  
-- Sysmon provides strong visibility into endpoint activity  
-- PowerShell detection requires tuning to reduce false positives  
-- Host-based monitoring lacks visibility for network scans  
-- Active response is powerful but must be controlled  
+- Built-in Wazuh rules effectively detect brute-force activity
+- Sysmon provides strong endpoint visibility
+- PowerShell detections require tuning to reduce false positives
+- Host-based monitoring has limited visibility for network scanning
+- Active response is powerful but should be controlled carefully
 
 ---
 
 ## 🚀 Future Improvements
 
-- Integrate Suricata for network detection  
-- Add threat intelligence enrichment  
-- Expand detection use cases  
-- Improve alert tuning  
+- Integrate Suricata or Zeek for network-based detection
+- Add alert enrichment and threat intelligence context
+- Expand detection coverage to additional attacker behaviors
+- Improve tuning and triage workflows
 
 ---
 
