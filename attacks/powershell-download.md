@@ -1,45 +1,62 @@
-# PowerShell Download Test
+# 🌐 Use Case: PowerShell Download Detection
 
-## Objective
+## 🎯 Objective
+Detect PowerShell-based file download activity.
 
-Detect suspicious download behavior using PowerShell and a Kali-hosted web server.
+---
 
-## Source
+## ⚔️ Attack Simulation
 
-Windows 10 endpoint
-
-## Supporting Infrastructure
-
-Kali Linux hosted a benign file using a Python HTTP server.
-
-## Kali Command
-
-```bash
-mkdir -p ~/wazuh-lab-files
-cd ~/wazuh-lab-files
-echo "This is a benign lab file for Wazuh testing." > test.txt
-python3 -m http.server 80
-```
-
-## Windows Command
-
+Command executed:
 ```powershell
 powershell -Command "Invoke-WebRequest http://192.168.56.40/test.txt"
 ```
 
-## Expected Detection
+![Download](../screenshots/powershell-attack-command.png)
 
-* Rule ID: 100501
-* Description: Custom: PowerShell download detected
+---
 
-## Evidence
+## 📄 Log Source
 
-![Kali Attack Source](screenshots/kali-attack-source.png)
-![PowerShell Attack Command](screenshots/powershell-attack-command.png)
-![Command Line Evidence](screenshots/powershell-commandline-evidence.png)
-![Detection Alerts](screenshots/custom-detection-alerts.png)
+- Sysmon Event ID 1 (Process Creation)
+- Command line captured
 
-## Result
+![Command Line](../screenshots/powershell-commandline-evidence.png)
 
-Wazuh successfully detected suspicious PowerShell download activity from the Windows endpoint.
+---
 
+## 🔍 Detection Logic
+
+- Base Rule: **92027**
+- Custom Rule: **100501**
+
+```xml
+<rule id="100501" level="12">
+  <if_sid>92027</if_sid>
+  <match>Invoke-WebRequest</match>
+  <description>Custom: PowerShell download detected</description>
+</rule>
+```
+
+---
+
+## 🚨 Alert Evidence
+
+![Alerts](../screenshots/custom-detection-alerts.png)
+
+---
+
+## 🧠 Analyst Triage
+
+- **Command:** Invoke-WebRequest  
+- **Destination:** attacker HTTP server  
+- **Technique:** T1105 – Ingress Tool Transfer  
+- **Severity:** High  
+- **Verdict:** True Positive  
+
+---
+
+## 📚 Lessons Learned
+
+- Monitoring command-line arguments is critical  
+- Network activity via PowerShell is high-risk behavior  
