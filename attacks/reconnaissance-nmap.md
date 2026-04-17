@@ -1,29 +1,49 @@
-# Nmap Reconnaissance Test
+# 🌐 Use Case: Nmap Reconnaissance
 
-## Objective
+## 🎯 Objective
+Simulate network reconnaissance using Nmap and evaluate detection capability.
 
-Simulate attacker reconnaissance from Kali Linux against the Windows endpoint.
+---
 
-## Source
+## ⚔️ Attack Simulation
 
-Kali Linux attacker machine
-
-## Target
-
-Windows 10 endpoint (`192.168.56.20`)
-
-## Commands
-
-```bash id="qk7z1n"
-nmap -sS 192.168.56.20
+Command executed:
+```bash
 nmap -Pn -p 135,139,445,3389 192.168.56.20
 ```
 
-## Evidence
+![Nmap Scan](../screenshots/reconnaissance-nmap-filtered.png)
 
-![Nmap Reconnaissance](screenshots/reconnaissance-nmap.png)
-![Nmap Filtered Ports](screenshots/reconnaissance-nmap-filtered.png)
+---
 
-## Result
+## 📄 Observed Behavior
 
-The Windows endpoint responded to reconnaissance activity, demonstrating attacker enumeration behavior in the lab environment.
+- Target host responded to scan  
+- Ports filtered  
+
+---
+
+## 🔍 Detection Result
+
+- No alerts generated in Wazuh  
+
+---
+
+## ⚠️ Detection Gap
+
+- Wazuh is host-based SIEM  
+- Does not detect network scanning effectively  
+
+---
+
+## 🧠 Analyst Insight
+
+- **Technique:** T1046 – Network Service Discovery  
+- **Verdict:** Activity observed, not detected  
+
+---
+
+## 📚 Lessons Learned
+
+- Host-based detection has visibility limitations  
+- Network IDS (Suricata / Zeek) required for full coverage  
